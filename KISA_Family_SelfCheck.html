@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your KISA Journey Starts Here</title>
+<style>
+  :root{
+    --green:#1B4D3E;
+    --green-dk:#12332A;
+    --navy:#10192B;
+    --gold:#C9A24B;
+    --gold-lt:#E4CE8C;
+    --tint:#EAF1EC;
+    --off:#F5F6F4;
+    --border:#E1E5E1;
+    --text:#17211D;
+    --muted:#5B675F;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:Calibri,'Segoe UI',Helvetica,Arial,sans-serif;
+    background:var(--off);
+    color:var(--text);
+    -webkit-font-smoothing:antialiased;
+  }
+  .headfont{font-family:Cambria,Georgia,'Times New Roman',serif;}
+
+  /* ---------- header ---------- */
+  header{
+    background:var(--green);
+    color:#fff;
+    padding:2.6rem 1.5rem 3.4rem;
+    position:relative;
+    overflow:hidden;
+  }
+  header::after{
+    content:"";
+    position:absolute; right:-60px; top:-60px;
+    width:220px; height:220px; border-radius:50%;
+    background:var(--green-dk);
+    opacity:.6;
+  }
+  .head-inner{max-width:760px; margin:0 auto; position:relative; z-index:1;}
+  .eyebrow{
+    color:var(--gold-lt); font-size:.78rem; font-weight:700; letter-spacing:.14em;
+    text-transform:uppercase; margin:0 0 .6rem;
+  }
+  h1{
+    font-size:2.15rem; margin:0 0 .5rem; line-height:1.2;
+  }
+  .sub{
+    color:var(--gold-lt); font-style:italic; font-size:1.02rem; margin:0 0 1rem; max-width:56ch;
+  }
+  .disclaimer{
+    background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:10px;
+    padding:.85rem 1.05rem;
+    font-size:.85rem;
+    color:#DCE7E1;
+    max-width:60ch;
+    line-height:1.45;
+  }
+
+  /* ---------- layout ---------- */
+  main{max-width:760px; margin:-1.6rem auto 0; padding:0 1.5rem 8rem;}
+
+  .card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:14px;
+    padding:1.7rem 1.6rem;
+    margin-bottom:1.4rem;
+    box-shadow:0 10px 24px -18px rgba(16,25,43,.35);
+  }
+  .section-label{
+    display:flex; align-items:center; gap:.6rem;
+    font-size:.78rem; font-weight:700; letter-spacing:.1em;
+    text-transform:uppercase; color:var(--green); margin-bottom:.3rem;
+  }
+  .section-label .dot{
+    width:26px;height:26px;border-radius:50%;
+    background:var(--green); color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-size:.75rem; font-weight:800;
+  }
+  .section-title{font-size:1.35rem; margin:.1rem 0 .3rem;}
+  .section-hint{color:var(--muted); font-size:.92rem; margin:0 0 1.3rem;}
+
+  .q{
+    padding:1rem 0;
+    border-top:1px solid var(--border);
+  }
+  .q:first-of-type{border-top:none; padding-top:.2rem;}
+  .q-text{font-size:1rem; margin:0 0 .7rem; line-height:1.4;}
+  .scale{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:.5rem;
+  }
+  .opt{
+    border:1px solid var(--border);
+    background:var(--off);
+    color:var(--muted);
+    border-radius:9px;
+    padding:.55rem .4rem;
+    font-size:.8rem;
+    text-align:center;
+    cursor:pointer;
+    transition:all .15s ease;
+    user-select:none;
+  }
+  .opt:hover{border-color:var(--green); color:var(--green);}
+  .opt.selected{
+    background:var(--green);
+    border-color:var(--green);
+    color:#fff;
+    font-weight:700;
+  }
+
+  /* ---------- results dock ---------- */
+  .dock{
+    position:fixed; left:0; right:0; bottom:0;
+    background:var(--navy);
+    color:#fff;
+    padding:1rem 1.5rem;
+    box-shadow:0 -8px 24px rgba(0,0,0,.25);
+    z-index:10;
+  }
+  .dock-inner{
+    max-width:760px; margin:0 auto;
+    display:flex; align-items:center; gap:1.1rem; flex-wrap:wrap;
+  }
+  .progress-wrap{flex:1; min-width:180px;}
+  .progress-label{font-size:.75rem; color:#9FB0A6; margin-bottom:.35rem; letter-spacing:.06em; text-transform:uppercase;}
+  .progress-bar{height:8px; border-radius:6px; background:#22314A; overflow:hidden;}
+  .progress-fill{height:100%; background:var(--gold); width:0%; transition:width .25s ease;}
+  .dock-btn{
+    background:var(--gold);
+    color:var(--green-dk);
+    border:none; border-radius:8px;
+    padding:.75rem 1.3rem;
+    font-weight:800; font-size:.92rem;
+    cursor:pointer;
+    white-space:nowrap;
+  }
+  .dock-btn:disabled{opacity:.4; cursor:not-allowed;}
+
+  /* ---------- results panel ---------- */
+  #results{display:none;}
+  .gauges{
+    display:grid; grid-template-columns:1fr 1fr; gap:1.2rem;
+    margin-bottom:1.2rem;
+  }
+  .gauge-card{
+    background:var(--tint);
+    border-radius:12px;
+    padding:1.2rem;
+    text-align:center;
+  }
+  .gauge-card h4{margin:.2rem 0 .1rem; font-size:.95rem; color:var(--text);}
+  .gauge-pct{font-family:Cambria,Georgia,serif; font-size:2.1rem; font-weight:700; color:var(--green); margin:.2rem 0;}
+  .gauge-tag{font-size:.8rem; color:var(--muted);}
+
+  .result-msg{
+    background:var(--green);
+    color:#fff;
+    border-radius:12px;
+    padding:1.3rem 1.4rem;
+    margin-bottom:1rem;
+  }
+  .result-msg h3{margin:0 0 .5rem; font-size:1.15rem;}
+  .result-msg p{margin:0; font-size:.95rem; line-height:1.55; color:#E7EEEA;}
+
+  .next-steps{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:1.2rem 1.4rem;
+  }
+  .next-steps h4{margin:0 0 .6rem; font-size:1rem; color:var(--text);}
+  .next-steps ol{margin:0; padding-left:1.2rem; color:var(--muted); font-size:.9rem; line-height:1.7;}
+
+  .print-btn{
+    display:inline-block; margin-top:1rem;
+    background:none; border:1.5px solid var(--green); color:var(--green);
+    border-radius:8px; padding:.55rem 1.1rem; font-size:.85rem; font-weight:700;
+    cursor:pointer;
+  }
+
+  @media print{
+    .dock{display:none;}
+    main{padding-bottom:1rem;}
+    header::after{display:none;}
+  }
+  @media (max-width:520px){
+    h1{font-size:1.7rem;}
+    .scale{grid-template-columns:repeat(2,1fr);}
+    .gauges{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="head-inner">
+    <p class="eyebrow">KISA &middot; Korea International Scholars Academy</p>
+    <h1 class="headfont">Your KISA Journey Starts Here</h1>
+    <p class="sub">A few encouraging minutes to reflect together &mdash; and picture your family joining the KISA community.</p>
+    <div class="disclaimer">
+      This is a private reflection tool for your own family's use &mdash; nothing here is submitted to KISA, scored officially, or used in admissions decisions. Every family is welcome to attend <strong>KISA Camp</strong> and go through our regular admissions process regardless of these results.
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- CHILD SECTION -->
+  <section class="card">
+    <div class="section-label"><span class="dot">A</span> About Your Child</div>
+    <h2 class="section-title headfont">Seven Everyday Signs</h2>
+    <p class="section-hint">For each statement, choose how often it describes your child <em>right now</em> &mdash; not how you hope they'll be.</p>
+
+    <div class="q" data-group="child" data-id="c1">
+      <p class="q-text">1. My child shows curiosity and picks up new ideas quickly for their age (emerging giftedness).</p>
+      <div class="scale"></div>
+    </div>
+    <div class="q" data-group="child" data-id="c2">
+      <p class="q-text">2. My child approaches new material with genuine curiosity, even when it's difficult (eager to learn).</p>
+      <div class="scale"></div>
+    </div>
+    <div class="q" data-group="child" data-id="c3">
+      <p class="q-text">3. My child cooperates well in group activities and follows shared routines and manners (socially ready).</p>
+      <div class="scale"></div>
+    </div>
+    <div class="q" data-group="child" data-id="c4">
+      <p class="q-text">4. My child brings a constructive, imaginative attitude to problem-solving (positive & creative).</p>
+      <div class="scale"></div>
+    </div>
+    <div class="q" data-group="child" data-id="c5">
+      <p class="q-text">5. My child doesn't give up quickly when something is hard, and works through frustration on their own (resilient).</p>
+      <div class="scale"></div>
+    </div>
+    <div class="q" data-group="child" data-id="c6">
+      <p class="q-text">6. My child feels proud of their own progress, more than they need to compare themselves with others (self-motivated).</p>
+      <div class="scale"></div>
+    </div>
+    <div class="q" data-group="child" data-id="c7">
+      <p class="q-text">7. My child enjoys learning alongside other children, celebrating a peer's success and working together with patience and respect, rather than needing to outdo them (collaborative spirit).</p>
+      <div class="scale"></div>
+    </div>
+  </section>
+
+  <!-- CHILD: ADVANCED LEVEL READINESS -->
+  <section class="card">
+    <div class="section-label"><span class="dot">B</span> Growing Into the 2-Year Advanced Level</div>
+    <h2 class="section-title headfont">Ready to Reach a Little Further?</h2>
+    <p class="section-hint">KISA's curriculum reaches about two years beyond what's typically expected at this age &mdash; an exciting stretch, not a hurdle. These reflections help you spot the everyday strengths your child already brings, and where a bit of encouragement will help them shine.</p>
+
+    <div class="q" data-group="child2" data-id="a1">
+      <p class="q-text">1. My child can stay engaged through a full day of varied classes, especially when something catches their interest.</p>
+      <div class="scale"></div>
+    </div>
+    <div class="q" data-group="child2" data-id="a2">
+      <p class="q-text">2. My child enjoys exploring reading or ideas that stretch a little beyond what's typical for their age.</p>
+      <div class="scale"></div>
+    </div>
+    <div class="q" data-group="child2" data-id="a3">
+      <p class="q-text">3. When my child struggles with something hard, they're usually willing to give it another try.</p>
+      <div class="scale"></div>
+    </div>
+    <div class="q" data-group="child2" data-id="a4">
+      <p class="q-text">4. My child is building good independence with homework and practice, needing a little less hands-on help over time.</p>
+      <div class="scale"></div>
+    </div>
+    <div class="q" data-group="child2" data-id="a5">
+      <p class="q-text">5. My child lights up when offered something a bit harder, once the current work starts to feel easy.</p>
+      <div class="scale"></div>
+    </div>
+    <div class="q" data-group="child2" data-id="a6">
+      <p class="q-text">6. My child is growing steadily in English expression, and is comfortable stretching toward content above what's typical for their age.</p>
+      <div class="scale"></div>
+    </div>
+  </section>
+
+  <!-- FAMILY: VALUES & PARTNERSHIP -->
+  <section class="card">
+    <div class="section-label"><span class="dot">C</span> About Your Family</div>
+    <h2 class="section-title headfont">Three Household Values</h2>
+    <p class="section-hint">KISA families partner closely with teachers &mdash; these reflect the values behind that partnership.</p>
+
+    <div class="q" data-group="parent" data-id="p1">
+      <p class="q-text">1. We value our child's emotional and social growth as much as their academic achievement.</p>
+      <div class="scale"></div>
+    </div>
+    <div class="q" data-group="parent" data-id="p2">
+      <p class="q-text">2. We're willing to engage with the wider KISA community, not just our own child's group.</p>
+      <div class="scale"></div>
+    </div>
+    <div class="q" data-group="parent" data-id="p3">
+      <p class="q-text">3. We tend to respond to setbacks with patience and encouragement rather than pressure.</p>
+      <div class="scale"></div>
+    </div>
+  </section>
+
+  <!-- FAMILY: COMMITMENT TO KISA COMMUNITY & REGULATIONS -->
+  <section class="card">
+    <div class="section-label"><span class="dot">D</span> Growing With the KISA Community</div>
+    <h2 class="section-title headfont">Everyday Habits That Make It Click</h2>
+    <p class="section-hint">KISA feels best when families and teachers move in the same rhythm. These reflect the everyday habits that help that partnership feel natural.</p>
+
+    <div class="q" data-group="parent2" data-id="r1">
+      <p class="q-text">1. We're ready to settle into a steady daily rhythm around KISA's schedule (8:10 arrival, 3:05 dismissal) throughout the program year.</p>
+      <div class="scale"></div>
+    </div>
+    <div class="q" data-group="parent2" data-id="r2">
+      <p class="q-text">2. We're comfortable embracing KISA's shared routines &mdash; like the no photo/video policy, uniform, and shuttle plans &mdash; as simply part of being in this community together.</p>
+      <div class="scale"></div>
+    </div>
+    <div class="q" data-group="parent2" data-id="r4">
+      <p class="q-text">3. We trust KISA's teachers and processes, and prefer to work things through with KISA directly whenever a question comes up.</p>
+      <div class="scale"></div>
+    </div>
+    <div class="q" data-group="parent2" data-id="r5">
+      <p class="q-text">4. We're looking forward to being part of family sessions &mdash; Curriculum Sessions, PTC Week, orientation &mdash; as a way to stay closely connected.</p>
+      <div class="scale"></div>
+    </div>
+    <div class="q" data-group="parent2" data-id="r6">
+      <p class="q-text">5. We're excited for our child to grow through both Korean-style rigor and an English-medium, internationally minded classroom, and we'll nurture that balance at home.</p>
+      <div class="scale"></div>
+    </div>
+  </section>
+
+</main>
+
+<div class="dock">
+  <div class="dock-inner">
+    <div class="progress-wrap">
+      <div class="progress-label"><span id="progressText">0 of 21 answered</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+    </div>
+    <button class="dock-btn" id="seeResults" disabled>See My Results</button>
+  </div>
+</div>
+
+<main id="results" style="margin-top:1.4rem;">
+  <section class="card">
+    <div class="gauges">
+      <div class="gauge-card">
+        <h4>Child &mdash; Everyday Fit</h4>
+        <div class="gauge-pct" id="childPct">0%</div>
+        <div class="gauge-tag" id="childTag">&nbsp;</div>
+      </div>
+      <div class="gauge-card">
+        <h4>Child &mdash; Advanced-Level Readiness</h4>
+        <div class="gauge-pct" id="child2Pct">0%</div>
+        <div class="gauge-tag" id="child2Tag">&nbsp;</div>
+      </div>
+      <div class="gauge-card">
+        <h4>Family &mdash; Values & Partnership</h4>
+        <div class="gauge-pct" id="parentPct">0%</div>
+        <div class="gauge-tag" id="parentTag">&nbsp;</div>
+      </div>
+      <div class="gauge-card">
+        <h4>Family &mdash; Community Commitment</h4>
+        <div class="gauge-pct" id="parent2Pct">0%</div>
+        <div class="gauge-tag" id="parent2Tag">&nbsp;</div>
+      </div>
+    </div>
+
+    <div class="result-msg">
+      <h3 id="resultTitle" class="headfont">&nbsp;</h3>
+      <p id="resultBody">&nbsp;</p>
+    </div>
+
+    <div class="next-steps">
+      <h4>Ready to take the next step?</h4>
+      <ol>
+        <li>Join a <strong>KISA Camp</strong> session (October) &mdash; a warm, 2-hour way to experience the curriculum together and see the fit for yourselves.</li>
+        <li>Talk with your child, in their own words, about what they enjoyed and what felt exciting.</li>
+        <li>Register by the November deadline &mdash; first-come, first-served, with a waitlist if needed.</li>
+      </ol>
+      <p style="margin:.9rem 0 0; color:var(--muted); font-size:.9rem; line-height:1.55;">There's no wrong score here &mdash; only a clearer picture of where your family is starting from. We'd love to help you take that next step with confidence.</p>
+      <button class="print-btn" onclick="window.print()">Print / Save This Page</button>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  const SCALE = ["Rarely", "Sometimes", "Often", "Almost Always"];
+  const groups = document.querySelectorAll(".q");
+  const answers = {};
+
+  groups.forEach(function(q){
+    const wrap = q.querySelector(".scale");
+    SCALE.forEach(function(label, idx){
+      const btn = document.createElement("div");
+      btn.className = "opt";
+      btn.textContent = label;
+      btn.dataset.value = idx + 1;
+      btn.addEventListener("click", function(){
+        wrap.querySelectorAll(".opt").forEach(o => o.classList.remove("selected"));
+        btn.classList.add("selected");
+        answers[q.dataset.id] = { value: idx + 1, group: q.dataset.group };
+        updateProgress();
+      });
+      wrap.appendChild(btn);
+    });
+  });
+
+  const TOTAL_Q = groups.length; // 11
+  const progressText = document.getElementById("progressText");
+  const progressFill = document.getElementById("progressFill");
+  const seeResultsBtn = document.getElementById("seeResults");
+
+  function updateProgress(){
+    const answered = Object.keys(answers).length;
+    progressText.textContent = answered + " of " + TOTAL_Q + " answered";
+    progressFill.style.width = Math.round((answered / TOTAL_Q) * 100) + "%";
+    seeResultsBtn.disabled = answered < TOTAL_Q;
+  }
+  updateProgress();
+
+  function tierFor(pct){
+    if (pct >= 85) return { tag: "A real strength", key: "high" };
+    if (pct >= 65) return { tag: "Building nicely", key: "mid" };
+    return { tag: "An area to grow together", key: "low" };
+  }
+
+  seeResultsBtn.addEventListener("click", function(){
+    const sums = {
+      child:  { sum: 0, max: 0 },
+      child2: { sum: 0, max: 0 },
+      parent: { sum: 0, max: 0 },
+      parent2:{ sum: 0, max: 0 },
+    };
+    Object.values(answers).forEach(function(a){
+      sums[a.group].sum += a.value;
+      sums[a.group].max += 4;
+    });
+
+    const pct = {};
+    Object.keys(sums).forEach(function(g){
+      pct[g] = sums[g].max ? Math.round((sums[g].sum / sums[g].max) * 100) : 0;
+    });
+
+    document.getElementById("childPct").textContent = pct.child + "%";
+    document.getElementById("child2Pct").textContent = pct.child2 + "%";
+    document.getElementById("parentPct").textContent = pct.parent + "%";
+    document.getElementById("parent2Pct").textContent = pct.parent2 + "%";
+
+    document.getElementById("childTag").textContent = tierFor(pct.child).tag;
+    document.getElementById("child2Tag").textContent = tierFor(pct.child2).tag;
+    document.getElementById("parentTag").textContent = tierFor(pct.parent).tag;
+    document.getElementById("parent2Tag").textContent = tierFor(pct.parent2).tag;
+
+    const childOverall = Math.round((pct.child + pct.child2) / 2);
+    const parentOverall = Math.round((pct.parent + pct.parent2) / 2);
+    const overall = Math.round((childOverall + parentOverall) / 2);
+
+    const title = document.getElementById("resultTitle");
+    const body = document.getElementById("resultBody");
+    const notes = [];
+
+    if (pct.child2 < 65 && pct.child >= 65) {
+      notes.push("Your child sounds like a wonderful everyday fit \u2014 the advanced-level stretch may just take a little warm-up time, which is completely normal and something KISA Camp can help you both get a feel for.");
+    }
+    if (pct.parent2 < 65 && pct.parent >= 65) {
+      notes.push("Your family's values are clearly aligned \u2014 spending a little more time on the day-to-day rhythm (schedule, routines, timing) can help everything click into place as you get closer to registering.");
+    }
+    if (pct.child2 >= 85 && pct.parent2 >= 85) {
+      notes.push("Both your child's readiness for advanced work and your family's comfort with KISA's rhythms are really shining through.");
+    }
+
+    if (overall >= 85) {
+      title.textContent = "This looks like a wonderful fit \u2014 you're ready to take the next step.";
+      body.textContent = "Your reflections show a child who's curious, resilient, and ready to stretch, alongside a family excited to grow together in the KISA community. " + (notes[0] || "We can't wait to welcome you to KISA Camp, and from there, into the KISA community.");
+    } else if (overall >= 65) {
+      title.textContent = "You're off to a great start \u2014 take the next step with confidence.";
+      body.textContent = "So much of what KISA looks for is already here. " + (notes[0] || "A couple of areas may take a little extra encouragement at home, which is completely normal at this stage.") + " Bring these reflections to KISA Camp, and let's build the rest together.";
+    } else {
+      title.textContent = "Every great fit starts with honest reflection \u2014 and you're off to a good start.";
+      body.textContent = "Thank you for taking this seriously \u2014 that thoughtfulness already says a lot about the kind of family KISA loves to welcome. Wherever you're starting from, KISA Camp is a warm, low-pressure way to see the fit for yourselves and take the next step as a family.";
+    }
+
+    if (notes.length > 1) {
+      body.textContent += " " + notes.slice(1).join(" ");
+    }
+
+    document.getElementById("results").style.display = "block";
+    document.getElementById("results").scrollIntoView({ behavior: "smooth", block: "start" });
+
+fetch("https://script.google.com/macros/s/AKfycbwYGnQdLPizR5NWKA1WFvSXlzi38BlXd0gzwj4AiiJo9nrkadgMGxL0l2hHfQdUrYtyfg/exec", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    ...Object.fromEntries(
+      Object.entries(answers).map(([k, v]) => [k, v.value])
+    ),
+    childScore: pct.child,
+    child2Score: pct.child2,
+    parentScore: pct.parent,
+    parent2Score: pct.parent2
+  })
+}).catch(err => console.error(err));
+  });
+})();
+</script>
+
+</body>
+</html>
